@@ -1,0 +1,252 @@
+%% Package sevseg: Print numbers in seven-segment look.
+%%
+%% This work may be distributed and/or modified under the conditions of
+%% the LaTeX Project Public License, either version 1.3 of this license
+%% or (at your option) any later version. The latest version of this
+%% license is in
+%%   http://www.latex-project.org/lppl.txt
+%% and version 1.3 or later is part of all distributions of LaTeX version
+%% 2005/12/01 or later.
+%%
+%% This work has the LPPL maintenance status `author-maintained'.
+%%
+%% The Current Maintainer of this work is Davide Campagnari
+%%    <davide (dot) campa (at) gmail.com>
+%%
+%% This work consists of the file sevseg.sty only.
+\NeedsTeXFormat{LaTeX2e}
+\ProvidesPackage{sevseg}[2023/11/25 v0]
+
+\newcommand*{\sevseg@show}{}
+\newcommand*{\sevseg@hide}{\@gobble}
+\newcommand*{\sevseg@bg}{\@gobble}
+
+\newdimen\sevseg@dima
+\newdimen\sevseg@dimb
+
+\RequirePackage{keyval}
+\define@key{sevseg@pkg}{on}[]{\if\relax\detokenize{#1}\relax\def\sevseg@show{}\else\def\sevseg@show{\textcolor{#1}}\fi}
+\define@key{sevseg@pkg}{off}[]{\if\relax\detokenize{#1}\relax\def\sevseg@hide{\@gobble}\else\def\sevseg@hide{\textcolor{#1}}\fi}
+\define@key{sevseg@pkg}{scale}[1]{\unitlength#1\unitlength\sevseg@dima#1\sevseg@dima\sevseg@dimb#1\sevseg@dimb}
+\define@key{sevseg@pkg}{unitlength}{\@defaultunits\unitlength#1ex\relax\@nnil}
+\define@key{sevseg@pkg}{linethickness}{\@defaultunits\sevseg@dima#1pt\relax\@nnil}
+\define@key{sevseg@pkg}{linesep}{\@defaultunits\sevseg@dimb#1pt\relax\@nnil}
+\define@key{sevseg@pkg}{bg}[]{\if\relax\detokenize{#1}\relax\def\sevseg@bg{}\else\def\sevseg@bg{\textcolor{#1}}\fi}
+
+\newcommand*{\sevsegsetup}[1]{\setkeys{sevseg@pkg}{#1}}
+
+\DeclareOption*{\begingroup\edef\x{\endgroup\noexpand\setkeys{sevseg@pkg}{\CurrentOption}}\x}
+\ProcessOptions\relax
+
+\RequirePackage{pict2e}
+
+\newcommand*{\sevseg}[2][]{%
+   \begingroup
+   \unitlength.5\fontcharht\font`\6\relax
+   \sevseg@dima.12414\unitlength
+   \sevseg@dimb.5\sevseg@dima
+   \setkeys{sevseg@pkg}{#1}%
+   \def\@tempa{\def\@tempa{\kern1.99\sevseg@dima}}%
+   \sevseg@#2\relax
+   \endgroup
+}
+\newcommand*{\sevseg@}[1]{%
+   \ifx#1\relax\else
+      \ifcsname sevseg@#1\endcsname
+         \@tempa
+         \csname sevseg@#1\endcsname
+      \else
+         \PackageWarning{sevseg}{No character `#1' available with \string\sevseg}%
+      \fi
+      \expandafter\sevseg@
+   \fi
+}
+\expandafter\def\csname sevseg@0\endcsname{\sevseg@wide0}
+\expandafter\def\csname sevseg@1\endcsname{\sevseg@wide1}
+\expandafter\def\csname sevseg@2\endcsname{\sevseg@wide2}
+\expandafter\def\csname sevseg@3\endcsname{\sevseg@wide3}
+\expandafter\def\csname sevseg@4\endcsname{\sevseg@wide4}
+\expandafter\def\csname sevseg@5\endcsname{\sevseg@wide5}
+\expandafter\def\csname sevseg@6\endcsname{\sevseg@wide6}
+\expandafter\def\csname sevseg@7\endcsname{\sevseg@wide7}
+\expandafter\def\csname sevseg@8\endcsname{\sevseg@wide8}
+\expandafter\def\csname sevseg@9\endcsname{\sevseg@wide9}
+\def\sevseg@A{\sevseg@wide A} \let\sevseg@a\sevseg@A
+\def\sevseg@B{\sevseg@wide B} \let\sevseg@b\sevseg@B
+\def\sevseg@C{\sevseg@wide C} \let\sevseg@c\sevseg@C
+\def\sevseg@D{\sevseg@wide D} \let\sevseg@d\sevseg@D
+\def\sevseg@E{\sevseg@wide E} \let\sevseg@e\sevseg@E
+\def\sevseg@F{\sevseg@wide F} \let\sevseg@f\sevseg@F
+\def\sevseg@O{\sevseg@wide O}
+\expandafter\def\csname sevseg@-\endcsname{\sevseg@wide-}
+\expandafter\def\csname sevseg@.\endcsname{\sevseg@narrow.}
+\expandafter\def\csname sevseg@,\endcsname{\sevseg@narrow.}
+\expandafter\def\csname sevseg@:\endcsname{\sevseg@narrow:}
+\newcommand*{\sevseg@wide}[1]{%
+   \@picture(\unitlength+2\sevseg@dima,2)(-\sevseg@dima,0)
+   \sevseg@bg\sevseg@bg@box@wide
+   \csname sevseg@@#1\endcsname
+   \endpicture
+}
+\newcommand*{\sevseg@narrow}[1]{%
+   \@picture(2\sevseg@dima,2)(-\sevseg@dima,0)
+   \sevseg@bg\sevseg@bg@box@narrow
+   \csname sevseg@@#1\endcsname
+   \endpicture
+}
+\expandafter\def\csname sevseg@@0\endcsname{%
+   \sevseg@hide{\sev@seg7}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg6}%
+}
+\expandafter\def\csname sevseg@@1\endcsname{%
+   \sevseg@hide{\sev@seg1\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+   \sevseg@show{\sev@seg2\sev@seg3}%
+}
+\expandafter\def\csname sevseg@@2\endcsname{%
+   \sevseg@hide{\sev@seg2\sev@seg5}%
+   \sevseg@show{\sev@seg4\sev@seg3\sev@seg7\sev@seg6\sev@seg1}%
+}
+\expandafter\def\csname sevseg@@3\endcsname{%
+   \sevseg@hide{\sev@seg5\sev@seg6}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@4\endcsname{%
+   \sevseg@hide{\sev@seg1\sev@seg4\sev@seg6}%
+   \sevseg@show{\sev@seg2\sev@seg3\sev@seg5\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@5\endcsname{%
+   \sevseg@hide{\sev@seg3\sev@seg6}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg7\sev@seg4\sev@seg5}%
+}
+\expandafter\def\csname sevseg@@6\endcsname{%
+   \sevseg@hide{\sev@seg3}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@7\endcsname{%
+   \sevseg@hide{\sev@seg1\sev@seg5\sev@seg6\sev@seg7}%
+   \sevseg@show{\sev@seg2\sev@seg3\sev@seg4}%
+}
+\expandafter\def\csname sevseg@@8\endcsname{%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@9\endcsname{%
+   \sevseg@hide{\sev@seg6}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg7}%
+}
+\def\sevseg@@A{%
+   \sevseg@hide{\sev@seg1}%
+   \sevseg@show{\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\def\sevseg@@B{%
+   \sevseg@hide{\sev@seg3\sev@seg4}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg5\sev@seg6\sev@seg7}%
+}
+\def\sevseg@@C{%
+   \sevseg@hide{\sev@seg2\sev@seg3\sev@seg7}%
+   \sevseg@show{\sev@seg1\sev@seg4\sev@seg5\sev@seg6}%
+}
+\def\sevseg@@D{%
+   \sevseg@hide{\sev@seg4\sev@seg5}%
+   \sevseg@show{\sev@seg1\sev@seg2\sev@seg3\sev@seg6\sev@seg7}%
+}
+\def\sevseg@@E{%
+   \sevseg@hide{\sev@seg2\sev@seg3}%
+   \sevseg@show{\sev@seg1\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\def\sevseg@@F{%
+   \sevseg@hide{\sev@seg1\sev@seg2\sev@seg3}%
+   \sevseg@show{\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\def\sevseg@@O{%
+   \sevseg@hide{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg6\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@-\endcsname{%
+   \sevseg@hide{\sev@seg1\sev@seg2\sev@seg3\sev@seg4\sev@seg5\sev@seg6}%
+   \sevseg@show{\sev@seg7}%
+}
+\expandafter\def\csname sevseg@@.\endcsname{%
+   \sevseg@show{\circle*{2\sevseg@dima}}%
+}
+\expandafter\def\csname sevseg@@:\endcsname{%
+   \sevseg@show{\put(0,.6){\circle*{2\sevseg@dima}}\put(0,1.4){\circle*{2\sevseg@dima}}}%
+}
+
+\newcommand*{\sev@seg}[1]{\csname sev@seg@#1\endcsname}
+
+\def\sevseg@bg@box@wide{%
+   \moveto(-2\sevseg@dima,-1.5\sevseg@dima)%
+   \lineto(\unitlength+2\sevseg@dima,-1.5\sevseg@dima)%
+   \lineto(\unitlength+2\sevseg@dima,2\unitlength+1.5\sevseg@dima)%
+   \lineto(-2\sevseg@dima,2\unitlength+1.5\sevseg@dima)%
+   \closepath\fillpath
+}
+\def\sevseg@bg@box@narrow{%
+   \moveto(-2\sevseg@dima,-1.5\sevseg@dima)%
+   \lineto(2\sevseg@dima,-1.5\sevseg@dima)%
+   \lineto(2\sevseg@dima,2\unitlength+1.5\sevseg@dima)%
+   \lineto(-2\sevseg@dima,2\unitlength+1.5\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@1\endcsname{%
+   \moveto(\sevseg@dimb,0)%
+   \lineto(\sevseg@dimb+\sevseg@dima,-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb,0)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,\sevseg@dima)%
+   \lineto(\sevseg@dimb+\sevseg@dima,\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@2\endcsname{%
+   \moveto(\unitlength,\sevseg@dimb)%
+   \lineto(\unitlength+\sevseg@dima,\sevseg@dimb+\sevseg@dima)%
+   \lineto(\unitlength+\sevseg@dima,\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(\unitlength,\unitlength-\sevseg@dimb)%
+   \lineto(\unitlength-\sevseg@dima,\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dima,\sevseg@dimb+\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@3\endcsname{%
+   \moveto(\unitlength,\unitlength+\sevseg@dimb)%
+   \lineto(\unitlength+\sevseg@dima,\unitlength+\sevseg@dimb+\sevseg@dima)%
+   \lineto(\unitlength+\sevseg@dima,2\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(\unitlength,2\unitlength-\sevseg@dimb)%
+   \lineto(\unitlength-\sevseg@dima,2\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dima,\unitlength+\sevseg@dimb+\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@4\endcsname{%
+   \moveto(\sevseg@dimb,2\unitlength)%
+   \lineto(\sevseg@dimb+\sevseg@dima,2\unitlength-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,2\unitlength-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb,2\unitlength)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,2\unitlength+\sevseg@dima)%
+   \lineto(\sevseg@dimb+\sevseg@dima,2\unitlength+\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@5\endcsname{%
+   \moveto(0,\unitlength+\sevseg@dimb)%
+   \lineto(\sevseg@dima,\unitlength+\sevseg@dimb+\sevseg@dima)%
+   \lineto(\sevseg@dima,2\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(0,2\unitlength-\sevseg@dimb)%
+   \lineto(-\sevseg@dima,2\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(-\sevseg@dima,\unitlength+\sevseg@dimb+\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@6\endcsname{%
+   \moveto(0,\sevseg@dimb)%
+   \lineto(\sevseg@dima,\sevseg@dimb+\sevseg@dima)%
+   \lineto(\sevseg@dima,\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(0,\unitlength-\sevseg@dimb)%
+   \lineto(-\sevseg@dima,\unitlength-\sevseg@dimb-\sevseg@dima)%
+   \lineto(-\sevseg@dima,\sevseg@dimb+\sevseg@dima)%
+   \closepath\fillpath
+}
+\expandafter\def\csname sev@seg@7\endcsname{%
+   \moveto(\sevseg@dimb,\unitlength)%
+   \lineto(\sevseg@dimb+\sevseg@dima,\unitlength-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,\unitlength-\sevseg@dima)%
+   \lineto(\unitlength-\sevseg@dimb,\unitlength)%
+   \lineto(\unitlength-\sevseg@dimb-\sevseg@dima,\unitlength+\sevseg@dima)%
+   \lineto(\sevseg@dimb+\sevseg@dima,\unitlength+\sevseg@dima)%
+   \closepath\fillpath
+}
