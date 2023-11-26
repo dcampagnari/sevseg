@@ -15,11 +15,12 @@
 %%
 %% This work consists of the file sevseg.sty only.
 \NeedsTeXFormat{LaTeX2e}
-\ProvidesPackage{sevseg}[2023/11/25 v0]
+\ProvidesPackage{sevseg}[2023/11/26 v0.1]
 
 \newcommand*{\sevseg@show}{}
 \newcommand*{\sevseg@hide}{\@gobble}
 \newcommand*{\sevseg@bg}{\@gobble}
+\newcommand*{\sevseg@scale}{1}
 
 \newdimen\sevseg@dima
 \newdimen\sevseg@dimb
@@ -27,7 +28,7 @@
 \RequirePackage{keyval}
 \define@key{sevseg@pkg}{on}[]{\if\relax\detokenize{#1}\relax\def\sevseg@show{}\else\def\sevseg@show{\textcolor{#1}}\fi}
 \define@key{sevseg@pkg}{off}[]{\if\relax\detokenize{#1}\relax\def\sevseg@hide{\@gobble}\else\def\sevseg@hide{\textcolor{#1}}\fi}
-\define@key{sevseg@pkg}{scale}[1]{\unitlength#1\unitlength\sevseg@dima#1\sevseg@dima\sevseg@dimb#1\sevseg@dimb}
+\define@key{sevseg@pkg}{scale}[1]{\def\sevseg@scale{#1}}
 \define@key{sevseg@pkg}{unitlength}{\@defaultunits\unitlength#1ex\relax\@nnil}
 \define@key{sevseg@pkg}{linethickness}{\@defaultunits\sevseg@dima#1pt\relax\@nnil}
 \define@key{sevseg@pkg}{linesep}{\@defaultunits\sevseg@dimb#1pt\relax\@nnil}
@@ -46,14 +47,17 @@
    \sevseg@dima.12414\unitlength
    \sevseg@dimb.5\sevseg@dima
    \setkeys{sevseg@pkg}{#1}%
-   \def\@tempa{\def\@tempa{\kern1.99\sevseg@dima}}%
+   \unitlength\sevseg@scale\unitlength
+   \sevseg@dima\sevseg@scale\sevseg@dima
+   \sevseg@dimb\sevseg@scale\sevseg@dimb
+   \def\sevseg@sep{\def\sevseg@sep{\kern1.99\sevseg@dima}}%
    \sevseg@#2\relax
    \endgroup
 }
 \newcommand*{\sevseg@}[1]{%
    \ifx#1\relax\else
       \ifcsname sevseg@#1\endcsname
-         \@tempa
+         \sevseg@sep
          \csname sevseg@#1\endcsname
       \else
          \PackageWarning{sevseg}{No character `#1' available with \string\sevseg}%
